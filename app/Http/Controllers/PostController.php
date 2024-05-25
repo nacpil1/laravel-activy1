@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -13,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::where('user_id', Auth::user()->id)->get();
         return view('resources.post.index', ['posts' => $posts]);
     }
 
@@ -31,6 +32,7 @@ class PostController extends Controller
     public function store(StorePostRequest $request)
     {
         Post::create([
+            'user_id' => Auth::user()->id,
             'subject' => $request->subject,
             'post' => $request->post,
             'status' => ($request->status == "on" ? 1 : 0)
@@ -61,6 +63,7 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         $post->update([
+            'user_id' => Auth::user()->id,
             'subject' => $request->subject,
             'post' => $request->post,
             'status' => ($request->status == "on" ? 1 : 0)
@@ -76,5 +79,10 @@ class PostController extends Controller
     {
         $post->delete();
         return redirect()->route('post.index')->with('message', 'Post Succesfully Deleted!');
+    }
+
+    public function postIndex() {
+        $posts = Post::where('status', 1)->get();
+        return view('pages.index', ['posts' => $posts]);
     }
 }
