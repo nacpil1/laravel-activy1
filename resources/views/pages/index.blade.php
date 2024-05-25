@@ -31,25 +31,32 @@
     <body class="font-sans antialiased">        
         <!-- Page Content -->
         <main>
-            <div class="container my-5">
-                <div class="row">
-                    <div class="col-12 mb-4">
-                        <h3>Posts</h3>
-                    </div>
+        <div class="container my-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h3>Posts</h3>
+        </div>
+    </div>
+
+    @isset($posts)
+        @foreach ($posts as $post)
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ $post->subject }}</h5>
+                    <p><small><b>Author:</b> {{ optional($post->user)->name }}</small></p>
+                    {{ $post->post }}
+                    <p class="border-top mt-4 font-monospace">
+                        For your feedback you can email the author at 
+                        <a href="mailto:{{ optional($post->user)->email }}">
+                            {{ optional($post->user)->email }}
+                        </a>
+                    </p>
                 </div>
-                @isset($posts)
-                    @foreach ($posts as $post)
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $post->subject }}</h5>
-                                <p><small><b>Author:</b> {{ $post->user->name }}</small></p>
-                                {{ $post->post }}
-                                <p class="border-top mt-4 font-monospace">For your feedback you can email the author on <a href="mailto:{{ $post->user->email }}">{{ $post->user->email }}</a></p>
-                            </div>
-                        </div>
-                    @endforeach
-                @endisset                
-            </div>            
+            </div>
+        @endforeach
+    @endisset
+</div>
+
         </main>
 
         <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
